@@ -7,11 +7,13 @@ from datetime import datetime
 def get_all_submissions():
     all_submissions = []
     url = 'https://devman.org/api/challenges/solution_attempts/'
-    total_pages = requests.get(url,params={'page':1}).json()['number_of_pages']
+    total_pages = requests.get(url,
+                               params={'page': 1}).json()['number_of_pages']
     for page in range(1, total_pages+1):
-        each_page = requests.get(url,params={'page':page}).json()['records']
+        each_page = requests.get(url, params={'page': page}).json()['records']
         all_submissions.extend(each_page)
     return all_submissions
+
 
 def get_midnighters(all_devman_submissions):
     midnighters = set()
@@ -23,7 +25,7 @@ def get_midnighters(all_devman_submissions):
         local_time = pytz.utc.localize(
                 submission_time
                 ).astimezone(timezone).time()
-        if  night_end > local_time > night_begin:
+        if night_end > local_time > night_begin:
             midnighters.add(submission['username'])
     return midnighters
 
