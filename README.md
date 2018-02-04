@@ -6,7 +6,7 @@ Python script revert night persons who at least once submitted the Devman exerci
 # Requirements
 
  - Python 3.5
- - Packages, please execute: ```bash pip install -r requirements.txt```
+ - For packages, please execute: ```bash pip install -r requirements.txt```
 
  # How to launch
 
