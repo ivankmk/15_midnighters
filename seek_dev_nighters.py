@@ -1,5 +1,5 @@
 import requests
-import pytz
+from pytz import timezone
 import json
 from datetime import datetime
 
@@ -18,27 +18,25 @@ def get_all_attempts():
             break
 
 
-def get_midnighters(all_devman_submissions):
+def get_midnighters(all_devman_attempts):
     midnighters = set()
     night_begin = 0
     night_end = 6
 
-    for submission in all_devman_submissions:
-        timezone = pytz.timezone(submission['timezone'])
-        submission_time = datetime.fromtimestamp(submission['timestamp'])
-        local_time = pytz.utc.localize(
-                submission_time
-                ).astimezone(timezone).time().hour
-        if night_end > local_time > night_begin:
-            midnighters.add(submission['username'])
+    for attempt in all_devman_attempts:
+        user_tzone = timezone(attempt['timezone'])
+        attempt_time = datetime.fromtimestamp(attempt['timestamp'],
+                                              user_tzone).time().hour
+        if night_end > attempt_time > night_begin:
+            midnighters.add(attempt['username'])
     return midnighters
 
 
 if __name__ == '__main__':
     delimiter = '-'*60
-    all_submission = get_all_attempts()
+    all_attempts = get_all_attempts()
     print(delimiter)
     print('There is the list of midnighters:\n')
-    for midnighter in get_midnighters(all_submission):
+    for midnighter in get_midnighters(all_attempts):
         print(midnighter)
     print(delimiter)
