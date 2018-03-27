@@ -6,10 +6,16 @@ from datetime import datetime
 
 def get_all_attempts():
     url = 'https://devman.org/api/challenges/solution_attempts/'
-    total_pages = requests.get(url,
-                               params={'page': 1}).json()['number_of_pages']
-    for page in range(1, total_pages+1):
-        yield requests.get(url, params={'page': page}).json()['records']
+    page = 1
+    while True:
+        response = requests.get(url, params={'page': page}).json()
+        all_pages = response['number_of_pages']
+        if page < all_pages:
+            for attempt in response['records']:
+                yield attempt
+            page = page + 1
+        else:
+            break
 
 
 def get_midnighters(all_devman_submissions):
@@ -28,18 +34,11 @@ def get_midnighters(all_devman_submissions):
     return midnighters
 
 
-def get_unique_midnighters(all_submission):
-    unique_midnighters = set()
-    for a in get_all_attempts():
-        for aa in get_midnighters(a):
-            unique_midnighters.add(aa)
-    return unique_midnighters
-
 if __name__ == '__main__':
     delimiter = '-'*60
     all_submission = get_all_attempts()
     print(delimiter)
     print('There is the list of midnighters:\n')
-    for midnighter in get_unique_midnighters(all_submission):
+    for midnighter in get_midnighters(all_submission):
         print(midnighter)
     print(delimiter)
