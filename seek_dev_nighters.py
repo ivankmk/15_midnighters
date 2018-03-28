@@ -25,8 +25,9 @@ def get_midnighters(all_devman_attempts):
 
     for attempt in all_devman_attempts:
         user_tzone = timezone(attempt['timezone'])
-        attempt_time = datetime.fromtimestamp(attempt['timestamp'],
-                                              user_tzone).time().hour
+        attempt_time = datetime.fromtimestamp(
+                attempt['timestamp'],user_tzone
+                ).hour
         if night_end > attempt_time > night_begin:
             midnighters.add(attempt['username'])
     return midnighters
